@@ -39,7 +39,7 @@
       var xhr = new XMLHttpRequest();
       xhr.open("POST", "https://api.openai.com/v1/completions", true);
       xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.setRequestHeader("Authorization", "Bearer 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");
+      xhr.setRequestHeader("Authorization", "Bearer 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");
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
           var jsonResponse = JSON.parse(xhr.responseText);
