@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Correction</title>
+   <style>
+    /* Add a mobile-responsive style */
+    @media only screen and (max-width: 600px) {
+      textarea, input[type='text'] {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div style="text-align:center;">
+    <form>
+      <label for="input_text">Enter text to be corrected:</label><br>
+      <textarea id="input_text" name="input_text" style="width:50%; height:200px;"></textarea><br>
+      <input type="button" value="Submit" onclick="submitForm()">
+    </form>
+    <br>
+
+    <form>
+      <label for='output_text'>Corrected Text:</label><br>
+      <input type='text' id='output_text' name='output_text' value='' readonly style='width:50%;'>
+    </form>
+    <br>
+    <form>
+    </form>
+    <!-- Add the "Copy to clipboard" button after the output text input -->
+    <input type="button" value="Copy to clipboard" onclick="copyToClipboard('output_text')">
+  </div>
+  <script>
+    function submitForm() {
+      var input_text = document.getElementById("input_text").value;
+      var prompt = "make my text correct and use some vocabulary : " + input_text;
+
+      // Use OpenAI API to correct text
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://api.openai.com/v1/completions", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.setRequestHeader("Authorization", "Bearer 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");
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var jsonResponse = JSON.parse(xhr.responseText);
+          var corrected_text = jsonResponse.choices[0].text;
+          document.getElementById("output_text").value = corrected_text;
+        }
+      };
+      var data = JSON.stringify({
+        "model": "text-davinci-003",
+        "prompt": prompt,
+        "temperature": 0.7,
+        "max_tokens": 256,
+        "top_p": 1,
+        "frequency_penalty": 0,
+        "presence_penalty": 0
+      });
+      xhr.send(data);
+    }
+    function copyToClipboard(elementId) {
+      // Create a "hidden" input
+      var aux = document.createElement("input");
+      // Assign it the value of the specified element
+      aux.setAttribute("value", document.getElementById(elementId).value);
+     // Append it to the body
+		document.body.appendChild(aux);
+		// Highlight its content
+		aux.select();
+		// Copy the highlighted text
+		document.execCommand("copy");
+		// Remove it from the body
+		document.body.removeChild(aux);
+		}
+		</script>
+
+		</body>
+		</html>
